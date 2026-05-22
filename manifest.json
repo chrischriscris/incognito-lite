@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "Incognito Lite",
+  "version": "1.0.0",
+  "description": "Temporarily auto-removes visited pages from local Firefox history while enabled.",
+  "permissions": [
+    "history",
+    "storage",
+    "tabs",
+    "webNavigation",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "icons": {
+    "48": "icon-unpaused.svg",
+    "96": "icon-unpaused.svg"
+  },
+  "browser_action": {
+    "default_title": "Incognito Lite",
+    "default_icon": "icon-unpaused.svg",
+    "default_area": "navbar"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "incognito-lite@example.local",
+      "strict_min_version": "91.0"
+    }
+  }
+}
