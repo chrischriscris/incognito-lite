@@ -1,44 +1,73 @@
 # Incognito Lite
 
-A small Firefox extension that adds a toolbar toggle for temporarily removing visited pages from local browser history.
+A small Firefox extension that removes visited `http://` and `https://` pages
+from local Firefox history while enabled.
 
-When enabled, it keeps your normal browser session intact, so you stay logged into sites. It does not clear cookies, cache, downloads, website-side history, search-account history, DNS logs, ISP logs, or network logs.
+This is not private browsing. It does not hide activity from websites, accounts,
+downloads, DNS, your ISP, your network, or anything outside Firefox history.
 
-## Load In Firefox
+## Features
 
-1. Open `about:debugging#/runtime/this-firefox`.
+- Toolbar toggle for history deletion mode.
+- State persists across browser reloads.
+- Icon changes when deletion mode is active.
+- Red page border while active.
+- Ignores non-web pages such as `about:` and extension URLs.
+- Runs locally. No analytics, tracking, or network service.
+
+## Usage
+
+Click the toolbar button:
+
+- White dot: normal Firefox history.
+- Red pause icon: matching visits are removed from local history.
+
+When enabled, Incognito Lite also tries to remove the current active web page
+from history.
+
+## Install Locally
+
+1. Open Firefox at `about:debugging#/runtime/this-firefox`.
 2. Click `Load Temporary Add-on...`.
 3. Select `manifest.json` from this folder.
-4. Use the toolbar button. It shows a white dot when history is normal and a pause icon when history is paused.
+4. Pin `Incognito Lite` to the toolbar if needed.
 
-If it does not appear, open the extensions button/puzzle-piece menu, right-click `Incognito Lite`, and choose `Pin to Toolbar`. You can also open `Customize Toolbar...` and drag the icon into the toolbar.
+Temporary add-ons are removed when Firefox restarts.
 
-## Use
-
-Click the toolbar button to toggle history deletion.
-
-When the icon is the red pause symbol, local history is being auto-deleted for normal `http` and `https` pages. Regular web pages also show a red glow border while history is paused. Click again to resume normal history.
-
-## Notes
-
-Firefox extensions cannot truly stop history from being written before it happens. This extension removes matching URLs immediately after navigation/history events fire.
-
-For a production add-on package, use Mozilla's `web-ext` tool:
+## Development
 
 ```sh
 npm install --global web-ext
-web-ext lint
 web-ext run
+web-ext lint
 ```
 
-## Publishing Checklist
+Manual checks before release:
 
-Use these details when submitting to Mozilla Add-ons.
+- Toolbar icon toggles correctly.
+- Pause state survives extension reloads.
+- `http://` and `https://` visits are removed only while active.
+- `about:` and other non-web URLs are ignored.
+- Red page border appears only while active.
 
-Name: `Incognito Lite`
+## Permissions
 
-Summary: `Temporarily auto-removes visited pages from local Firefox history while enabled.`
+- `history`: delete matching local history entries.
+- `storage`: remember the toggle state.
+- `tabs`: inspect tab URLs and update the indicator.
+- `webNavigation`: detect page navigations.
+- `<all_urls>`: run on normal web pages.
 
-Description: `Incognito Lite adds a simple toolbar toggle for automatically deleting local Firefox history entries while enabled. It keeps your normal browser session active, so you can stay logged into sites without opening a private window. A red glow border appears on regular web pages while history deletion is active. It is not full private browsing and does not hide activity from websites, search engines, networks, ISPs, DNS providers, or account-level search history.`
+The extension does not send URLs, settings, analytics, or other data anywhere.
 
-Permissions explanation: `The history permission is used to delete local history entries while the extension is enabled. The tabs and webNavigation permissions are used to detect page navigation, update/delete the current visited URL, and show the paused indicator on open web tabs. The storage permission is used only to save whether the toggle is enabled. Host access is used for normal http and https pages so the extension can remove visited URLs from history and show the paused indicator while enabled.`
+## Package
+
+```sh
+zip -r incognito-lite-1.0.0.zip manifest.json background.js content-script.js icon-paused.svg icon-unpaused.svg README.md PRIVACY.md amo-listing.md
+```
+
+Do not commit release zip files.
+
+## License
+
+No license file is currently included.
