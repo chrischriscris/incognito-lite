@@ -6,6 +6,8 @@ from local Firefox history while enabled.
 This is not private browsing. It does not hide activity from websites, accounts,
 downloads, DNS, your ISP, your network, or anything outside Firefox history.
 
+Requires Firefox 140 or newer.
+
 ## Features
 
 - Toolbar toggle for history deletion mode.
