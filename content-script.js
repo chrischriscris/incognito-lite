@@ -1,35 +1,31 @@
 (() => {
-  if (window.incognitoLitePausedBorderLoaded) {
-    return;
-  }
-
-  window.incognitoLitePausedBorderLoaded = true;
-
   const HISTORY_PAUSED_BORDER_ID = "incognito-lite-paused-border";
   const HISTORY_PAUSED_STYLE_ID = "incognito-lite-paused-style";
   const HISTORY_PAUSED_KEY = "paused";
+  const HISTORY_PAUSED_STYLE = `
+    #${HISTORY_PAUSED_BORDER_ID} {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      pointer-events: none;
+      box-sizing: border-box;
+      box-shadow:
+        inset 0 0 8px 1px rgba(217, 48, 37, 0.48),
+        inset 0 0 20px 5px rgba(217, 48, 37, 0.3),
+        inset 0 0 38px 10px rgba(217, 48, 37, 0.16);
+    }
+  `;
 
   function ensurePausedStyle() {
-    if (document.getElementById(HISTORY_PAUSED_STYLE_ID)) return;
+    let style = document.getElementById(HISTORY_PAUSED_STYLE_ID);
 
-    const style = document.createElement("style");
-    style.id = HISTORY_PAUSED_STYLE_ID;
-    style.textContent = `
-      #${HISTORY_PAUSED_BORDER_ID} {
-        position: fixed;
-        inset: 0;
-        z-index: 2147483647;
-        pointer-events: none;
-        box-sizing: border-box;
-        border: 4px solid rgba(217, 48, 37, 0.92);
-        box-shadow:
-          inset 0 0 0 2px rgba(255, 255, 255, 0.72),
-          inset 0 0 18px rgba(217, 48, 37, 0.65),
-          0 0 24px rgba(217, 48, 37, 0.8);
-      }
-    `;
+    if (!style) {
+      style = document.createElement("style");
+      style.id = HISTORY_PAUSED_STYLE_ID;
+      (document.head || document.documentElement).appendChild(style);
+    }
 
-    (document.head || document.documentElement).appendChild(style);
+    style.textContent = HISTORY_PAUSED_STYLE;
   }
 
   function setPausedBorder(paused) {
@@ -55,11 +51,15 @@
     setPausedBorder(result[HISTORY_PAUSED_KEY]);
   }
 
-  browser.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName !== "local" || !changes[HISTORY_PAUSED_KEY]) return;
+  if (!window.incognitoLitePausedBorderLoaded) {
+    window.incognitoLitePausedBorderLoaded = true;
 
-    setPausedBorder(changes[HISTORY_PAUSED_KEY].newValue);
-  });
+    browser.storage.onChanged.addListener((changes, areaName) => {
+      if (areaName !== "local" || !changes[HISTORY_PAUSED_KEY]) return;
+
+      setPausedBorder(changes[HISTORY_PAUSED_KEY].newValue);
+    });
+  }
 
   syncPausedBorder().catch(console.error);
 })();
