@@ -2,6 +2,10 @@ const PAUSED_KEY = "paused";
 const ICON_UNPAUSED = "icon-unpaused.svg";
 const ICON_PAUSED = "icon-paused.svg";
 
+function shouldHandleTab(tab) {
+  return tab.id && tab.url && shouldDeleteUrl(tab.url);
+}
+
 async function getPaused() {
   const result = await browser.storage.local.get({ [PAUSED_KEY]: false });
   return result[PAUSED_KEY];
@@ -36,10 +40,27 @@ async function deleteFromHistory(url) {
   await browser.history.deleteUrl({ url });
 }
 
+async function injectPausedIndicator(tabId) {
+  try {
+    await browser.tabs.executeScript(tabId, {
+      file: "content-script.js",
+      runAt: "document_start"
+    });
+  } catch (error) {
+    console.warn("Could not update paused indicator for tab", tabId, error);
+  }
+}
+
+async function syncPausedIndicator() {
+  const tabs = await browser.tabs.query({});
+  await Promise.all(tabs.filter(shouldHandleTab).map((tab) => injectPausedIndicator(tab.id)));
+}
+
 browser.browserAction.onClicked.addListener(async () => {
   const paused = !(await getPaused());
   await browser.storage.local.set({ [PAUSED_KEY]: paused });
   await setUi(paused);
+  await syncPausedIndicator();
 
   const tabs = await browser.tabs.query({ currentWindow: true, active: true });
   if (paused && tabs[0]?.url) {
@@ -56,5 +77,10 @@ browser.webNavigation.onCommitted.addListener((details) => {
 });
 
 getPaused()
-  .then(setUi)
+  .then(async (paused) => {
+    await setUi(paused);
+    if (paused) {
+      await syncPausedIndicator();
+    }
+  })
   .catch(console.error);

@@ -2,7 +2,7 @@
 
 Incognito Lite does not collect, transmit, sell, or share any personal data.
 
-The extension uses Firefox extension APIs locally on your device to detect page visits and remove matching local history entries while the extension is enabled.
+The extension uses Firefox extension APIs locally on your device to detect page visits and remove matching local history entries while the extension is enabled. While pause mode is enabled, the extension also displays a local visual border on normal web pages so the enabled state is visible.
 
 Data handled locally:
 

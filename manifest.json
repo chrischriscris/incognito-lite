@@ -13,6 +13,13 @@
   "background": {
     "scripts": ["background.js"]
   },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_start"
+    }
+  ],
   "icons": {
     "48": "icon-unpaused.svg",
     "96": "icon-unpaused.svg"

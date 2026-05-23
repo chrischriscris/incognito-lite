@@ -17,7 +17,7 @@ If it does not appear, open the extensions button/puzzle-piece menu, right-click
 
 Click the toolbar button to toggle history deletion.
 
-When the icon is the red pause symbol, local history is being auto-deleted for normal `http` and `https` pages. Click again to resume normal history.
+When the icon is the red pause symbol, local history is being auto-deleted for normal `http` and `https` pages. Regular web pages also show a red glow border while history is paused. Click again to resume normal history.
 
 ## Notes
 
@@ -39,6 +39,6 @@ Name: `Incognito Lite`
 
 Summary: `Temporarily auto-removes visited pages from local Firefox history while enabled.`
 
-Description: `Incognito Lite adds a simple toolbar toggle for automatically deleting local Firefox history entries while enabled. It keeps your normal browser session active, so you can stay logged into sites without opening a private window. It is not full private browsing and does not hide activity from websites, search engines, networks, ISPs, DNS providers, or account-level search history.`
+Description: `Incognito Lite adds a simple toolbar toggle for automatically deleting local Firefox history entries while enabled. It keeps your normal browser session active, so you can stay logged into sites without opening a private window. A red glow border appears on regular web pages while history deletion is active. It is not full private browsing and does not hide activity from websites, search engines, networks, ISPs, DNS providers, or account-level search history.`
 
-Permissions explanation: `The history permission is used to delete local history entries while the extension is enabled. The tabs and webNavigation permissions are used to detect page navigation and update/delete the current visited URL. The storage permission is used only to save whether the toggle is enabled.`
+Permissions explanation: `The history permission is used to delete local history entries while the extension is enabled. The tabs and webNavigation permissions are used to detect page navigation, update/delete the current visited URL, and show the paused indicator on open web tabs. The storage permission is used only to save whether the toggle is enabled. Host access is used for normal http and https pages so the extension can remove visited URLs from history and show the paused indicator while enabled.`
