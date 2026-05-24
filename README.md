@@ -1,12 +1,13 @@
 # Incognito Lite
 
-A small Firefox extension that removes visited `http://` and `https://` pages
-from local Firefox history while enabled.
+A small Chrome and Firefox extension that removes visited `http://` and
+`https://` pages from local browser history while enabled.
 
 This is not private browsing. It does not hide activity from websites, accounts,
-downloads, DNS, your ISP, your network, or anything outside Firefox history.
+downloads, DNS, your ISP, your network, or anything outside local browser
+history.
 
-Requires Firefox 140 or newer.
+Requires Chrome with Manifest V3 support or Firefox 140 or newer.
 
 ## Features
 
@@ -21,13 +22,13 @@ Requires Firefox 140 or newer.
 
 Click the toolbar button:
 
-- White dot: normal Firefox history.
+- White dot: normal browser history.
 - Red pause icon: matching visits are removed from local history.
 
 When enabled, Incognito Lite also tries to remove the current active web page
 from history.
 
-## Install Locally
+## Install Locally in Firefox
 
 1. Open Firefox at `about:debugging#/runtime/this-firefox`.
 2. Click `Load Temporary Add-on...`.
@@ -36,6 +37,15 @@ from history.
 
 Temporary add-ons are removed when Firefox restarts.
 
+## Install Locally in Chrome
+
+1. Open Chrome at `chrome://extensions`.
+2. Enable `Developer mode`.
+3. Click `Load unpacked`.
+4. Run `./scripts/package-chrome.sh`.
+5. Select `dist/chrome/incognito-lite`.
+6. Pin `Incognito Lite` to the toolbar if needed.
+
 ## Development
 
 ```sh
@@ -43,6 +53,18 @@ npm install --global web-ext
 web-ext run
 web-ext lint
 ```
+
+For Chrome, use `chrome://extensions` and reload the unpacked extension after
+editing files.
+
+Project layout:
+
+- `manifest.json`: Firefox extension manifest.
+- `manifest.chrome.json`: Chrome extension manifest used by the Chrome package script.
+- `src/`: background and content scripts.
+- `icons/`: Firefox SVG icons and Chrome PNG icons.
+- `scripts/`: packaging helpers.
+- `dist/`: generated packages and unpacked Chrome output; do not commit.
 
 Manual checks before release:
 
@@ -58,14 +80,23 @@ Manual checks before release:
 - `storage`: remember the toggle state.
 - `tabs`: inspect tab URLs and update the indicator.
 - `webNavigation`: detect page navigations.
+- `scripting`: update the visible paused indicator in already-open tabs.
 - `<all_urls>`: run on normal web pages.
 
 The extension does not send URLs, settings, analytics, or other data anywhere.
 
 ## Package
 
+Firefox:
+
 ```sh
-zip -r incognito-lite-1.0.0.zip manifest.json background.js content-script.js icon-paused.svg icon-unpaused.svg README.md PRIVACY.md amo-listing.md
+./scripts/package-firefox.sh
+```
+
+Chrome:
+
+```sh
+./scripts/package-chrome.sh
 ```
 
 Do not commit release zip files.

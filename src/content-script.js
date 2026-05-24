@@ -2,6 +2,7 @@
   const HISTORY_PAUSED_BORDER_ID = "incognito-lite-paused-border";
   const HISTORY_PAUSED_STYLE_ID = "incognito-lite-paused-style";
   const HISTORY_PAUSED_KEY = "paused";
+  const extensionApi = globalThis.browser || globalThis.chrome;
   const HISTORY_PAUSED_STYLE = `
     #${HISTORY_PAUSED_BORDER_ID} {
       position: fixed;
@@ -15,6 +16,27 @@
         inset 0 0 38px 10px rgba(217, 48, 37, 0.16);
     }
   `;
+
+  function callApi(apiObject, methodName, ...args) {
+    const apiFunction = apiObject[methodName].bind(apiObject);
+
+    if (globalThis.browser) {
+      return apiFunction(...args);
+    }
+
+    return new Promise((resolve, reject) => {
+      apiFunction(...args, (result) => {
+        const error = extensionApi.runtime.lastError;
+
+        if (error) {
+          reject(new Error(error.message));
+          return;
+        }
+
+        resolve(result);
+      });
+    });
+  }
 
   function ensurePausedStyle() {
     let style = document.getElementById(HISTORY_PAUSED_STYLE_ID);
@@ -47,14 +69,14 @@
   }
 
   async function syncPausedBorder() {
-    const result = await browser.storage.local.get({ [HISTORY_PAUSED_KEY]: false });
+    const result = await callApi(extensionApi.storage.local, "get", { [HISTORY_PAUSED_KEY]: false });
     setPausedBorder(result[HISTORY_PAUSED_KEY]);
   }
 
   if (!window.incognitoLitePausedBorderLoaded) {
     window.incognitoLitePausedBorderLoaded = true;
 
-    browser.storage.onChanged.addListener((changes, areaName) => {
+    extensionApi.storage.onChanged.addListener((changes, areaName) => {
       if (areaName !== "local" || !changes[HISTORY_PAUSED_KEY]) return;
 
       setPausedBorder(changes[HISTORY_PAUSED_KEY].newValue);

@@ -6,6 +6,7 @@ node_modules/
 web-ext-artifacts/
 .web-extension-id
 incognito-lite-*.zip
+dist/
 
 # Logs
 *.log

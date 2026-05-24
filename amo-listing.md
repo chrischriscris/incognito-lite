@@ -2,17 +2,17 @@
 
 ## Summary
 
-Temporarily auto-removes visited pages from local Firefox history while enabled.
+Temporarily auto-removes visited pages from local browser history while enabled.
 
 ## Description
 
-Incognito Lite adds a simple toolbar toggle for automatically deleting local Firefox history entries while enabled.
+Incognito Lite adds a simple toolbar toggle for automatically deleting local browser history entries while enabled.
 
 It keeps your normal browser session active, so you can stay logged into sites without opening a private window. Click the toolbar icon once to pause local history. Click again to resume normal history.
 
 The icon shows a white dot when local history is normal and a pause symbol when history deletion is active. Regular web pages also show a red glow border while history deletion is active.
 
-Important: Incognito Lite is not full private browsing. It only removes local Firefox history entries. It does not hide activity from websites, search engines, networks, ISPs, DNS providers, account-level search history, downloads, cookies, or cache.
+Important: Incognito Lite is not full private browsing. It only removes local browser history entries. It does not hide activity from websites, search engines, networks, ISPs, DNS providers, account-level search history, downloads, cookies, or cache.
 
 ## Permissions Explanation
 
@@ -26,4 +26,4 @@ Host access: used so normal http and https page visits can be detected and remov
 
 ## Privacy Policy
 
-Incognito Lite does not collect, transmit, sell, or share any personal data. All behavior happens locally in Firefox.
+Incognito Lite does not collect, transmit, sell, or share any personal data. All behavior happens locally in the browser.
